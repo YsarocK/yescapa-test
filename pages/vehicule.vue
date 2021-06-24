@@ -3,13 +3,19 @@
         <Header></Header>
         <div class="vehicule-layout">
             <div class="main-content">
-                <img :src="vehicule.pictures[imgToDisplay].url" alt="">
+                <div class="slider">
+                    <img :src="vehicule.pictures[imgToDisplay].url" alt="">
+                    <div>
+                        <p v-if="imgToDisplay > 0" v-on:click="imgToDisplay -= 1">Previous</p>
+                        <p v-if="imgToDisplay < (vehicule.pictures.length - 1)" v-on:click="imgToDisplay += 1">Next</p>
+                    </div>
+                </div>
                 <div class="vehicule-infos-container">
                     <img :src="vehicule.vehicle_owner_picture_url" alt="">
                     <div class="vehicule-infos">
                         <h1>{{ vehicule.title }}</h1>
                         <p>{{ vehicule.vehicle_location_zipcode }} {{ vehicule.vehicle_location_city }}</p>
-                        <p>{{ vehicule.review_count }}</p>
+                        <p>{{ vehicule.review_count }} reviews</p>
                     </div>
                 </div>
                 <div class="vehicule-commodités">
@@ -44,6 +50,7 @@ export default {
         const query = route.query.id;
         let vehicules = await $http.$get(`https://gitlab.com/api/v4/snippets/2095016/raw`);
         const vehicule = vehicules.results.find(x => x.id == query);
+        console.log(vehicule)
         return { vehicule }
     }
 }
@@ -73,10 +80,33 @@ export default {
     justify-content: center;
 }
 
-.main-content>img{
+.main-content .slider{
     width: 100%;
     height: 500px;
+    position: relative;
+}
+
+.main-content .slider img{
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+}
+
+.main-content .slider div{
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    margin: auto;
+    display: flex;
+}
+
+.main-content .slider p{
+    padding: 5px 10px;
+    border-radius: 5Px;
+    margin: 10px;
+    background: white;
+    color: black;
+    cursor: pointer;
 }
 
 .main-content .vehicule-infos-container{
